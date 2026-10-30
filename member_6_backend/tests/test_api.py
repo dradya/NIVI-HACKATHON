@@ -23,6 +23,20 @@ def test_health_and_case_crud_and_pagination(client):
     assert client.get(f"/api/v1/cases/{second_id}").status_code == 404
 
 
+def test_github_pages_origin_is_allowed_for_browser_api_requests(client):
+    response = client.options(
+        "/api/v1/cases",
+        headers={
+            "Origin": "https://dradya.github.io",
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "content-type",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == "https://dradya.github.io"
+
+
 def test_evidence_upload_list_metadata_and_original_file(client):
     case_id = create_case(client)
     response = client.post(

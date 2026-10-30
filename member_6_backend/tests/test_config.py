@@ -38,3 +38,21 @@ def test_postgres_configuration_requires_password_without_echoing_it(monkeypatch
 
     assert "DB_PASSWORD" in str(error.value)
     assert "local_dev_only_change_me" not in str(error.value)
+
+
+@pytest.mark.parametrize(
+    "raw_url",
+    [
+        "postgres://nivi:private@db.example.com/nivi",
+        "postgresql://nivi:private@db.example.com/nivi",
+    ],
+)
+def test_hosted_postgres_urls_use_psycopg_v3(monkeypatch, raw_url):
+    monkeypatch.setenv("DATABASE_URL", raw_url)
+
+    url = make_url(_database_url())
+
+    assert url.drivername == "postgresql+psycopg"
+    assert url.username == "nivi"
+    assert url.password == "private"
+    assert url.host == "db.example.com"

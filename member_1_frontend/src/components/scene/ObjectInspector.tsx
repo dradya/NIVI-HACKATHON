@@ -20,7 +20,8 @@ interface Props {
 }
 
 export function ObjectInspector({ object, evidenceItems, timelineEvents, onClose, onViewEvidence, onViewTimeline }: Props) {
-  const conf = confidenceLabel(object.confidence);
+  const score = object.confidence;
+  const conf = score === undefined ? undefined : confidenceLabel(score);
 
   // Gather evidence items linked to this object
   const linkedEvidence = evidenceItems.filter(e => object.evidence_ids.includes(e.id));
@@ -66,16 +67,16 @@ export function ObjectInspector({ object, evidenceItems, timelineEvents, onClose
 
         {/* Properties */}
         <Section label="Properties">
-          <PropRow label="Confidence">
+          {conf && score !== undefined && <PropRow label="Confidence">
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
               <div style={{ height: 3, background: 'var(--brown-100)', borderRadius: 2, overflow: 'hidden' }}>
-                <div style={{ height: '100%', background: conf.color, width: formatConfidence(object.confidence), borderRadius: 2 }} />
+                <div style={{ height: '100%', background: conf.color, width: formatConfidence(score), borderRadius: 2 }} />
               </div>
               <span style={{ fontFamily: 'var(--font-data)', fontSize: 11, color: conf.color }}>
-                {formatConfidence(object.confidence)} — {conf.label}
+                {formatConfidence(score)} — {conf.label}
               </span>
             </div>
-          </PropRow>
+          </PropRow>}
           <PropRow label="Position">
             <span style={{ fontFamily: 'var(--font-data)', fontSize: 11, color: 'var(--brown-600)' }}>
               x = {object.position.x}m,&nbsp; y = {object.position.y}m
@@ -108,9 +109,11 @@ export function ObjectInspector({ object, evidenceItems, timelineEvents, onClose
                   <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--brown-600)', textTransform: 'capitalize' }}>
                     {evidenceTypeIcon(ev.type)} {ev.type}
                   </span>
-                  <span style={{ fontFamily: 'var(--font-data)', fontSize: 10, color: confidenceLabel(ev.confidence).color }}>
-                    {formatConfidence(ev.confidence)}
-                  </span>
+                  {ev.confidence !== undefined && (
+                    <span style={{ fontFamily: 'var(--font-data)', fontSize: 10, color: confidenceLabel(ev.confidence).color }}>
+                      {formatConfidence(ev.confidence)}
+                    </span>
+                  )}
                 </div>
                 <p style={{ fontSize: 11, color: 'var(--brown-500)', lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                   {ev.description}
@@ -142,7 +145,7 @@ export function ObjectInspector({ object, evidenceItems, timelineEvents, onClose
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
                   <span style={{ fontFamily: 'var(--font-data)', fontSize: 10, color: 'var(--brown-400)' }}>
-                    {formatTime(ev.timestamp)}
+                    {ev.timestamp ? formatTime(ev.timestamp) : 'Time not provided'}
                   </span>
                   <span style={{ fontSize: 10, fontWeight: 600, padding: '1px 6px', borderRadius: 3, background: 'var(--brown-100)', color: 'var(--brown-500)', textTransform: 'capitalize' }}>
                     {ev.event_type}
@@ -152,7 +155,7 @@ export function ObjectInspector({ object, evidenceItems, timelineEvents, onClose
                   {ev.description}
                 </p>
                 <p style={{ fontSize: 10, color: 'var(--brown-400)', marginTop: 3 }}>
-                  {formatTimestamp(ev.timestamp)} · View in Timeline →
+                  {ev.timestamp ? formatTimestamp(ev.timestamp) : 'Timestamp not provided'} · View in Timeline →
                 </p>
               </button>
             ))

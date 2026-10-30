@@ -126,6 +126,8 @@ export function useInvestigation() {
       return;
     }
 
+    sessionIdRef.current = session.session_id;
+    setState(s => ({ ...s, session }));
     // Fix 3: catch triggerPipeline failure
     try {
       await api.triggerPipeline(session.session_id);
@@ -154,15 +156,15 @@ export function useInvestigation() {
           setState(s => ({
             ...s,
             isLoading: false, sceneLoading: false,
-            error: 'Processing pipeline failed. Check the backend logs.',
+            error: updated.error ?? 'Processing pipeline failed. Check the backend logs.',
           }));
         }
-      } catch {
+      } catch (err) {
         clearInterval(pollRef.current!);
         setState(s => ({
           ...s,
           isLoading: false, sceneLoading: false,
-          error: 'Lost connection to the backend while polling for status.',
+          error: `Could not retrieve processing results: ${String(err)}`,
         }));
       }
     }, 2000);

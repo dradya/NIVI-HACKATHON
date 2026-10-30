@@ -18,7 +18,9 @@ export function Sidebar({ state, onNavigate }: Props) {
   const badges: Partial<Record<ActiveView, string | undefined>> = {
     evidence:      evidenceCollection ? String(evidenceCollection.total_count) : undefined,
     timeline:      timeline ? String(timeline.events.length) : undefined,
-    investigation: investigation ? `${Math.round(investigation.confidence_score * 100)}%` : undefined,
+    investigation: investigation?.confidence_score === undefined
+      ? undefined
+      : `${Math.round(investigation.confidence_score * 100)}%`,
   };
 
   return (

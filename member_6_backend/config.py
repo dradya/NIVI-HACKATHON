@@ -23,6 +23,10 @@ def _database_url() -> str | URL:
     """Build a SQLAlchemy URL from discrete DB settings without URI interpolation."""
     explicit_url = os.getenv("DATABASE_URL")
     if explicit_url:
+        if explicit_url.startswith("postgres://"):
+            return "postgresql+psycopg://" + explicit_url.removeprefix("postgres://")
+        if explicit_url.startswith("postgresql://"):
+            return "postgresql+psycopg://" + explicit_url.removeprefix("postgresql://")
         return explicit_url
 
     host = os.getenv("DB_HOST")
@@ -64,7 +68,10 @@ class Settings:
     real_adapter_factory: str | None = os.getenv("REAL_ADAPTER_FACTORY")
     processing_timeout_seconds: int = _int_env("PROCESSING_TIMEOUT_SECONDS", 300)
     cors_origins: tuple[str, ...] = tuple(
-        item.strip() for item in os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:5173").split(",") if item.strip()
+        item.strip() for item in os.getenv(
+            "CORS_ORIGINS",
+            "http://localhost:3000,http://localhost:5173,https://dradya.github.io",
+        ).split(",") if item.strip()
     )
     log_level: str = os.getenv("LOG_LEVEL", "INFO").upper()
 

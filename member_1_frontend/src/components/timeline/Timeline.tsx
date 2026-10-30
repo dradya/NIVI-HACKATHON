@@ -54,7 +54,9 @@ export function TimelineView({ data, selection, onSelectEvent }: Props) {
           <div>
             <h2 style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--brown-900)', marginBottom: 5 }}>Event Timeline</h2>
             <p style={{ fontFamily: 'var(--font-data)', fontSize: 11, color: 'var(--brown-400)' }}>
-              {formatTimestamp(data.start_time)} → {formatTimestamp(data.end_time)} · {totalMin} min · {data.events.length} events
+              {data.start_time && data.end_time
+                ? `${formatTimestamp(data.start_time)} → ${formatTimestamp(data.end_time)} · ${totalMin} min · ${data.events.length} events`
+                : `No timestamped events · ${data.events.length} events`}
             </p>
           </div>
           <div style={{ display: 'flex', gap: 6 }}>
@@ -79,7 +81,7 @@ export function TimelineView({ data, selection, onSelectEvent }: Props) {
         <div style={{ flex: 1, overflowY: 'auto', padding: '24px 36px' }}>
           <div style={{ maxWidth: 620 }}>
             {events.map((ev, idx) => {
-              const conf    = confidenceLabel(ev.confidence);
+              const conf    = ev.confidence === undefined ? undefined : confidenceLabel(ev.confidence);
               const isSel   = localSelected?.id === ev.id;
               const linked  = isLinked(ev);
               const isLast  = idx === events.length - 1;
@@ -93,7 +95,7 @@ export function TimelineView({ data, selection, onSelectEvent }: Props) {
                 >
                   {/* Time */}
                   <div style={{ fontFamily: 'var(--font-data)', fontSize: 11, color: 'var(--brown-300)', textAlign: 'right', paddingTop: 13, whiteSpace: 'nowrap' }}>
-                    {formatTime(ev.timestamp)}
+                    {ev.timestamp ? formatTime(ev.timestamp) : '—'}
                   </div>
 
                   {/* Node + connector */}
@@ -133,9 +135,9 @@ export function TimelineView({ data, selection, onSelectEvent }: Props) {
                           <span style={{ fontSize: 10, color: '#b8860b', fontFamily: 'var(--font-data)' }}>● linked</span>
                         )}
                       </div>
-                      <span style={{ fontFamily: 'var(--font-data)', fontSize: 10, color: conf.color, fontWeight: 500 }}>
-                        {formatConfidence(ev.confidence)}
-                      </span>
+                      {conf
+                        ? <span style={{ fontFamily: 'var(--font-data)', fontSize: 10, color: conf.color, fontWeight: 500 }}>{formatConfidence(ev.confidence!)}</span>
+                        : <span style={{ fontFamily: 'var(--font-data)', fontSize: 10, color: 'var(--brown-300)' }}>Not scored</span>}
                     </div>
 
                     <p style={{ fontSize: 12, color: 'var(--brown-600)', lineHeight: 1.6, marginBottom: 7 }}>{ev.description}</p>
@@ -177,9 +179,11 @@ export function TimelineView({ data, selection, onSelectEvent }: Props) {
             </div>
             <p style={{ fontFamily: 'var(--font-data)', fontSize: 10, color: 'var(--brown-300)', marginBottom: 18 }}>{localSelected.id}</p>
 
-            <DRow label="Timestamp"   value={formatTimestamp(localSelected.timestamp)} mono />
+            <DRow label="Timestamp"   value={localSelected.timestamp ? formatTimestamp(localSelected.timestamp) : 'Not provided'} mono />
             <DRow label="Type"        value={localSelected.event_type} />
-            <DRow label="Confidence"  value={`${formatConfidence(localSelected.confidence)} — ${confidenceLabel(localSelected.confidence).label}`} />
+            {localSelected.confidence !== undefined && (
+              <DRow label="Confidence" value={`${formatConfidence(localSelected.confidence)} — ${confidenceLabel(localSelected.confidence).label}`} />
+            )}
             <DRow label="Description" value={localSelected.description} />
 
             {localSelected.location && (

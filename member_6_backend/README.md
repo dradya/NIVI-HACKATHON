@@ -39,6 +39,8 @@ If Python 3.12 is not installed, install it or use a supported Python version co
 
 To select a different local database or storage folder, set `DATABASE_URL` and `STORAGE_DIR` before starting the app. The app does not load `.env` files automatically. In Compose, the API receives `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD` as separate values; `config.py` builds a SQLAlchemy `URL` object so special characters in the password are escaped by SQLAlchemy rather than interpolated into a URI.
 
+For the hosted NIVI frontend, include `https://dradya.github.io` in `CORS_ORIGINS`. When deploying outside Docker, start the API with `uvicorn member_6_backend.main:app --host 0.0.0.0 --port $PORT`; set `DATABASE_URL` to the host's PostgreSQL connection string and `STORAGE_DIR` to a durable mounted directory. Hosted `postgres://` and `postgresql://` URLs are normalized to the installed psycopg v3 driver.
+
 ## Docker Compose
 
 Docker Desktop and Compose must be installed and Docker Desktop must be running. The compose file is independent of the repository root compose file, uses named database and evidence volumes, and connects the API to database hostname `db`.

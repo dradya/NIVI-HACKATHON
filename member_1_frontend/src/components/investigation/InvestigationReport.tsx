@@ -6,8 +6,9 @@ type Tab = 'summary' | 'contradictions' | 'gaps' | 'questions';
 
 export function InvestigationReportView({ report }: { report: InvestigationReport }) {
   const [tab, setTab] = useState<Tab>('summary');
-  const pct = Math.round(report.confidence_score * 100);
-  const confColor = pct >= 80 ? '#2d6a4f' : pct >= 55 ? '#b8860b' : '#c0392b';
+  const confidence = report.confidence_score;
+  const pct = confidence === undefined ? undefined : Math.round(confidence * 100);
+  const confColor = pct === undefined ? 'var(--brown-300)' : pct >= 80 ? '#2d6a4f' : pct >= 55 ? '#b8860b' : '#c0392b';
 
   const tabs: Array<{ id: Tab; label: string; count?: number }> = [
     { id: 'summary',         label: 'Summary' },
@@ -30,17 +31,17 @@ export function InvestigationReportView({ report }: { report: InvestigationRepor
           </div>
 
           {/* Confidence gauge */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+          {pct !== undefined && confidence !== undefined && <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, flexShrink: 0 }}>
             <svg width="68" height="68" viewBox="0 0 68 68">
               <circle cx="34" cy="34" r="26" fill="none" stroke="var(--brown-100)" strokeWidth="5" />
               <circle cx="34" cy="34" r="26" fill="none" stroke={confColor} strokeWidth="5"
-                strokeDasharray={`${2 * Math.PI * 26 * report.confidence_score} ${2 * Math.PI * 26}`}
+                strokeDasharray={`${2 * Math.PI * 26 * confidence} ${2 * Math.PI * 26}`}
                 strokeLinecap="round" transform="rotate(-90 34 34)"
                 style={{ transition: 'stroke-dasharray 1s ease' }} />
               <text x="34" y="38" textAnchor="middle" fontSize="13" fontWeight="700" fill={confColor} fontFamily="JetBrains Mono, monospace">{pct}%</text>
             </svg>
             <span style={{ fontSize: 10, color: 'var(--brown-400)', whiteSpace: 'nowrap' }}>Overall Confidence</span>
-          </div>
+          </div>}
         </div>
       </div>
 

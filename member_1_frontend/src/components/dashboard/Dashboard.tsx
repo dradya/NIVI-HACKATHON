@@ -43,7 +43,7 @@ export function Dashboard({ state, onNavigate, onUpload, onDemo }: Props) {
           AI Reality Reconstructor
         </h1>
         <p style={{ color: 'var(--brown-500)', fontSize: 'var(--text-base)', maxWidth: '54ch', lineHeight: 1.65 }}>
-          Upload multi-modal evidence — images, video, documents, sensor logs. The AI pipeline reconstructs what happened, when, and where.
+          Upload multi-modal evidence — images, video, documents, sensor logs. Store original files and run the processing adapters configured for this deployment.
         </p>
       </div>
 
@@ -119,7 +119,7 @@ export function Dashboard({ state, onNavigate, onUpload, onDemo }: Props) {
                 <input
                   type="file"
                   multiple
-                  accept="image/*,video/*,.pdf,.txt,.json,.log,.csv"
+                  accept="image/*,video/*,.pdf,.docx,.txt,.json,.log,.csv,.wav,.mp3"
                   style={{ display: 'none' }}
                   onChange={e => handleFiles(e.target.files)}
                 />
@@ -146,7 +146,7 @@ export function Dashboard({ state, onNavigate, onUpload, onDemo }: Props) {
             </button>
           </div>
           <p style={{ fontFamily: 'var(--font-data)', fontSize: 11, color: 'var(--brown-300)' }}>
-            Supported: MP4 · MOV · JPG · PNG · PDF · TXT · JSON · CSV · LOG
+            Supported: MP4 · MOV · AVI · JPG · PNG · WEBP · PDF · DOCX · TXT · JSON · CSV · LOG · WAV · MP3
           </p>
         </div>
       )}
@@ -155,9 +155,9 @@ export function Dashboard({ state, onNavigate, onUpload, onDemo }: Props) {
       {hasData && (
         <>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16, marginBottom: 28 }}>
-            <StatCard label="Evidence Items"  value={evidenceCollection!.total_count}                         sub="files processed"       accent="var(--brown-600)" onClick={() => onNavigate('evidence')} />
+            <StatCard label="Evidence Items"  value={evidenceCollection!.total_count}                         sub="originals stored"       accent="var(--brown-600)" onClick={() => onNavigate('evidence')} />
             <StatCard label="Timeline Events" value={timeline?.events.length ?? 0}                            sub="reconstructed moments" accent="var(--brown-600)" onClick={() => onNavigate('timeline')} />
-            <StatCard label="Confidence"      value={formatConfidence(investigation?.confidence_score ?? 0)}  sub="overall reconstruction" accent={confidenceLabel(investigation?.confidence_score ?? 0).color} onClick={() => onNavigate('investigation')} />
+            <StatCard label="Confidence"      value={investigation?.confidence_score === undefined ? 'N/A' : formatConfidence(investigation.confidence_score)} sub={investigation?.confidence_score === undefined ? 'no analyzer configured' : 'overall reconstruction'} accent={investigation?.confidence_score === undefined ? 'var(--brown-300)' : confidenceLabel(investigation.confidence_score).color} onClick={() => onNavigate('investigation')} />
             <StatCard label="Contradictions"  value={investigation?.contradictions.length ?? 0}               sub="flagged conflicts"     accent={investigation && investigation.contradictions.length > 0 ? '#c0392b' : '#2d6a4f'} onClick={() => onNavigate('investigation')} />
           </div>
 
@@ -191,7 +191,9 @@ export function Dashboard({ state, onNavigate, onUpload, onDemo }: Props) {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
             {[
               { icon: '◈', title: 'Evidence Library',  desc: `${evidenceCollection!.total_count} items — images, video, documents & sensors`, dest: 'evidence' as ActiveView },
-              { icon: '⊳', title: 'Event Timeline',    desc: `${timeline?.events.length ?? 0} events over ${Math.round(((new Date(timeline?.end_time ?? 0).getTime() - new Date(timeline?.start_time ?? 0).getTime()) / 60000))} minutes`, dest: 'timeline' as ActiveView },
+              { icon: '⊳', title: 'Event Timeline',    desc: timeline?.start_time && timeline.end_time
+                ? `${timeline.events.length} events over ${Math.round((new Date(timeline.end_time).getTime() - new Date(timeline.start_time).getTime()) / 60000)} minutes`
+                : `${timeline?.events.length ?? 0} timestamped events`, dest: 'timeline' as ActiveView },
               { icon: '⊡', title: '3D Scene Model',    desc: 'Interactive 3D floor plan — click objects to cross-link with evidence and timeline', dest: 'scene' as ActiveView },
             ].map(c => (
               <button key={c.title} onClick={() => onNavigate(c.dest)} style={{

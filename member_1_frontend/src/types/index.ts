@@ -6,7 +6,7 @@ export interface EvidenceItem {
   source_file: string;
   timestamp?: string;
   location?: { x: number; y: number; z?: number };
-  confidence: number;
+  confidence?: number;
   tags: string[];
   description: string;
   extracted_text?: string;
@@ -22,12 +22,12 @@ export interface EvidenceCollection {
 
 export interface TimelineEvent {
   id: string;
-  timestamp: string;
+  timestamp?: string;
   duration_seconds?: number;
   description: string;
   evidence_ids: string[];
   entities: string[];
-  confidence: number;
+  confidence?: number;
   event_type: 'primary' | 'secondary' | 'inferred';
   location?: { x: number; y: number };
 }
@@ -64,7 +64,7 @@ export interface InvestigationQuestion {
 export interface InvestigationReport {
   investigation_id: string;
   summary: string;
-  confidence_score: number;
+  confidence_score?: number;
   contradictions: Contradiction[];
   gaps: Gap[];
   questions: InvestigationQuestion[];
@@ -78,7 +78,7 @@ export interface SceneObject {
   object_type: string;
   position: { x: number; y: number };
   dimensions?: { width: number; height: number };
-  confidence: number;
+  confidence?: number;
   evidence_ids: string[];
 }
 
@@ -94,6 +94,7 @@ export interface UploadSession {
   status: 'uploading' | 'processing' | 'ready' | 'failed';
   progress: number;
   stage: string;
+  error?: string;
 }
 
 export type ActiveView = 'dashboard' | 'evidence' | 'timeline' | 'scene' | 'investigation';

@@ -119,7 +119,8 @@ export function EvidenceLibrary({ items, selection, onSelectItem }: Props) {
 }
 
 function EvCard({ item, selected, linked, onClick }: { item: EvidenceItem; selected: boolean; linked: boolean; onClick: () => void }) {
-  const conf = confidenceLabel(item.confidence);
+  const score = item.confidence;
+  const conf = score === undefined ? undefined : confidenceLabel(score);
   return (
     <button onClick={onClick} style={{
       background: '#fff',
@@ -141,9 +142,9 @@ function EvCard({ item, selected, linked, onClick }: { item: EvidenceItem; selec
           </span>
           {linked && <span style={{ fontSize: 10, color: '#b8860b', fontFamily: 'var(--font-data)' }}>● linked</span>}
         </div>
-        <span style={{ fontSize: 11, fontFamily: 'var(--font-data)', color: conf.color, fontWeight: 500 }}>
-          {conf.label} · {formatConfidence(item.confidence)}
-        </span>
+        {conf && score !== undefined
+          ? <span style={{ fontSize: 11, fontFamily: 'var(--font-data)', color: conf.color, fontWeight: 500 }}>{conf.label} · {formatConfidence(score)}</span>
+          : <span style={{ fontSize: 11, fontFamily: 'var(--font-data)', color: 'var(--brown-300)' }}>Not analyzed</span>}
       </div>
       <p style={{ fontSize: 12, color: 'var(--brown-600)', lineHeight: 1.55, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
         {item.description}
@@ -162,7 +163,8 @@ function EvCard({ item, selected, linked, onClick }: { item: EvidenceItem; selec
 }
 
 function EvDetail({ item, onClose }: { item: EvidenceItem; onClose: () => void }) {
-  const conf = confidenceLabel(item.confidence);
+  const score = item.confidence;
+  const conf = score === undefined ? undefined : confidenceLabel(score);
   return (
     <aside style={{ width: 300, minWidth: 300, background: '#fff', borderLeft: '1px solid var(--brown-200)', padding: 22, overflowY: 'auto', animation: 'slide-in .25s ease both' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
@@ -173,13 +175,15 @@ function EvDetail({ item, onClose }: { item: EvidenceItem; onClose: () => void }
       <R label="Source File"  value={item.source_file} mono />
       <R label="Type"         value={`${evidenceTypeIcon(item.type)} ${item.type}`} />
       {item.timestamp && <R label="Captured At" value={formatTimestamp(item.timestamp)} mono />}
+      {conf && score !== undefined && (
       <div style={{ marginBottom: 14 }}>
         <L>Confidence</L>
         <div style={{ height: 3, background: 'var(--brown-100)', borderRadius: 2, overflow: 'hidden', marginBottom: 4 }}>
-          <div style={{ height: '100%', background: conf.color, width: formatConfidence(item.confidence), borderRadius: 2 }} />
+          <div style={{ height: '100%', background: conf.color, width: formatConfidence(score), borderRadius: 2 }} />
         </div>
-        <span style={{ fontSize: 11, fontFamily: 'var(--font-data)', color: conf.color }}>{formatConfidence(item.confidence)} — {conf.label}</span>
+        <span style={{ fontSize: 11, fontFamily: 'var(--font-data)', color: conf.color }}>{formatConfidence(score)} — {conf.label}</span>
       </div>
+      )}
       <R label="Description" value={item.description} />
       {item.location && <R label="Position" value={`x=${item.location.x}  y=${item.location.y}${item.location.z !== undefined ? `  z=${item.location.z}` : ''}`} mono />}
       {item.extracted_text && (
