@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: nivi-hackathon-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r member_6_backend/requirements.txt
+    startCommand: uvicorn member_6_backend.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/v1/health/live
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: DATABASE_URL
+        value: sqlite:////tmp/nivi.db
+      - key: STORAGE_DIR
+        value: /tmp/nivi-evidence
+      - key: MAX_UPLOAD_BYTES
+        value: "26214400"
+      - key: CORS_ORIGINS
+        value: https://dradya.github.io
+      - key: ADAPTER_MODE
+        value: mock

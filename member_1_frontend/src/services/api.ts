@@ -5,7 +5,9 @@ import type {
 
 const API_BASE = (
   import.meta.env.VITE_API_URL?.trim() ||
-  (import.meta.env.DEV ? 'http://localhost:8000' : '')
+  (import.meta.env.DEV
+    ? 'http://localhost:8000'
+    : 'https://nivi-hackathon-api.onrender.com')
 ).replace(/\/+$/, '');
 const API_ROOT = `${API_BASE}/api/v1`;
 

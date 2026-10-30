@@ -33,11 +33,11 @@ The local dashboard connects to `http://localhost:8000` automatically. Uploads a
 
 ## Connect a deployed backend to GitHub Pages
 
-Deploy `member_6_backend` to a Python host with HTTPS, a PostgreSQL `DATABASE_URL`, and durable storage mounted at `/var/data`. Set `STORAGE_DIR=/var/data/evidence`, `CORS_ORIGINS=https://dradya.github.io`, and a suitable `MAX_UPLOAD_BYTES` on the API host. The backend supports hosted PostgreSQL URLs and converts them to its installed psycopg v3 driver.
+The repository includes a Render Blueprint in `render.yaml` for a no-cost demo API. Open <https://dashboard.render.com/blueprints>, select this GitHub repository, and deploy the Blueprint. It starts the existing FastAPI backend at `https://nivi-hackathon-api.onrender.com`; the production dashboard is configured to use that URL. If Render assigns a different service URL, set that URL as the GitHub Actions variable `VITE_API_URL` instead.
 
-Then add the deployed API origin (for example, `https://your-api.example.com`, with no `/api/v1` suffix) as the `VITE_API_URL` **Actions variable** in the GitHub repository's Settings → Secrets and variables → Actions. Rerun the Pages workflow so Vite builds the dashboard with that URL.
+This free demo uses SQLite and temporary file storage under `/tmp`. Render spins down idle free services, and the filesystem is erased on spin-down, restart, or redeploy; uploaded files and cases are not durable and the first request after idle can take about a minute. Use non-sensitive test evidence only.
 
-The API currently has no authentication or authorization, and the default adapters do not perform AI analysis. Do not expose it to the public internet with real or sensitive evidence until access controls are added. A durable database and file store are also required for evidence to survive backend restarts.
+The API currently has no authentication or authorization, and the default adapters do not perform AI analysis. This is a public demo endpoint, not a secure evidence repository. Do not upload real or sensitive forensic evidence. The mock pipeline accepts and stores uploads temporarily, then returns an explicit no-findings result; **Load Demo Case** remains the full sample investigation.
 
 ## Run the dashboard locally
 
