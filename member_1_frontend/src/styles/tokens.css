@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Backgrounds */
+  --bg-base:      #ffffff;
+  --bg-subtle:    #faf8f5;
+  --bg-muted:     #f3ede4;
+  --bg-raised:    #ede4d8;
+
+  /* Brown scale */
+  --brown-50:     #faf8f5;
+  --brown-100:    #f3ede4;
+  --brown-200:    #e8ddd0;
+  --brown-300:    #d4c3b0;
+  --brown-400:    #b89a7e;
+  --brown-500:    #8b6b4f;
+  --brown-600:    #6b4f35;
+  --brown-700:    #4a3422;
+  --brown-800:    #2e1f12;
+  --brown-900:    #1a0f08;
+
+  /* Semantic */
+  --color-primary:   var(--brown-600);
+  --color-accent:    var(--brown-500);
+  --color-danger:    #c0392b;
+  --color-warning:   #b8860b;
+  --color-success:   #2d6a4f;
+
+  /* Text */
+  --text-primary:    var(--brown-900);
+  --text-secondary:  var(--brown-600);
+  --text-muted:      var(--brown-400);
+  --text-inverse:    #ffffff;
+
+  /* Borders */
+  --border-light:    var(--brown-200);
+  --border-default:  var(--brown-300);
+  --border-strong:   var(--brown-500);
+
+  /* Typography */
+  --font-ui:    'Inter', system-ui, sans-serif;
+  --font-data:  'JetBrains Mono', monospace;
+
+  /* Scale */
+  --text-xs:   0.6875rem;
+  --text-sm:   0.8125rem;
+  --text-base: 0.9375rem;
+  --text-lg:   1.0625rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+  --text-3xl:  2rem;
+
+  /* Spacing */
+  --sp-1: 0.25rem;  --sp-2: 0.5rem;   --sp-3: 0.75rem;
+  --sp-4: 1rem;     --sp-5: 1.25rem;  --sp-6: 1.5rem;
+  --sp-8: 2rem;     --sp-10: 2.5rem;  --sp-12: 3rem;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(74,52,34,.08);
+  --shadow-md:  0 4px 16px rgba(74,52,34,.10);
+  --shadow-lg:  0 8px 32px rgba(74,52,34,.12);
+
+  /* Transitions */
+  --ease: 200ms cubic-bezier(.4,0,.2,1);
+}

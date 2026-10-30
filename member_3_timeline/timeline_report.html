@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Evidence-Supported Timeline</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #0f172a; color: #f8fafc; padding: 2rem; }
+        h1 { text-align: center; color: #38bdf8; margin-bottom: 2rem; }
+        .timeline-container { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
+        .timeline-card { background: #1e293b; border-radius: 8px; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .badge { font-size: 0.75rem; font-weight: bold; padding: 0.2rem 0.6rem; border-radius: 9999px; color: white; }
+        .time { font-family: monospace; color: #94a3b8; font-size: 0.9rem; }
+        .entities { margin: 0.5rem 0; font-size: 0.85rem; color: #cbd5e1; }
+        .reasoning { font-size: 0.85rem; color: #fbbf24; margin: 0.4rem 0; }
+        .evidence-section { margin-top: 0.8rem; border-top: 1px solid #334155; padding-top: 0.6rem; font-size: 0.85rem; }
+        .evidence-box { background: #0f172a; padding: 0.4rem 0.6rem; border-radius: 4px; margin-top: 0.3rem; border-left: 2px solid #38bdf8; }
+    </style>
+</head>
+<body>
+    <h1>Evidence-Supported Chronological Timeline</h1>
+    <div class="timeline-container">
+        
+            <div class="timeline-card" style="border-left: 5px solid #10b981;">
+                <div class="header">
+                    <span class="badge" style="background:#10b981;">OBSERVED</span>
+                    <span class="time">2026-10-30 14:15:00</span>
+                </div>
+                <h3>CCTV Camera 3 captures Alice Chen entering Server Room vestibule.</h3>
+                <p>2026-10-30 14:15:00 CCTV Camera 3 captures Alice Chen entering Server Room vestibule.</p>
+                <div class="entities">
+                    <strong>Participants:</strong> Alice Chen |
+                    <strong>Objects:</strong> None
+                </div>
+                
+                <div class="evidence-section">
+                    <strong>Evidence:</strong>
+                    <div class="evidence-box"><strong>[SOURCE_CCTV_FEED]</strong>: <em>"2026-10-30 14:15:00 CCTV Camera 3 captures Alice Chen entering Server Room vestibule."</em></div>
+                </div>
+            </div>
+            
+            <div class="timeline-card" style="border-left: 5px solid #10b981;">
+                <div class="header">
+                    <span class="badge" style="background:#10b981;">OBSERVED</span>
+                    <span class="time">2026-10-30 14:15:45</span>
+                </div>
+                <h3>Badge Reader DR-01: Master Keycard #09 swiped by Alice Chen. Access granted.</h3>
+                <p>2026-10-30 14:15:45 Badge Reader DR-01: Master Keycard #09 swiped by Alice Chen. Access granted.</p>
+                <div class="entities">
+                    <strong>Participants:</strong> Alice Chen |
+                    <strong>Objects:</strong> Master Keycard #09
+                </div>
+                
+                <div class="evidence-section">
+                    <strong>Evidence:</strong>
+                    <div class="evidence-box"><strong>[SOURCE_BADGE_LOGS]</strong>: <em>"2026-10-30 14:15:45 Badge Reader DR-01: Master Keycard #09 swiped by Alice Chen. Access granted."</em></div>
+                </div>
+            </div>
+            
+            <div class="timeline-card" style="border-left: 5px solid #10b981;">
+                <div class="header">
+                    <span class="badge" style="background:#10b981;">OBSERVED</span>
+                    <span class="time">2026-10-30 14:18:30</span>
+                </div>
+                <h3>CCTV Camera 3 captures Bob Martin meeting Alice Chen at the secure door.</h3>
+                <p>2026-10-30 14:18:30 CCTV Camera 3 captures Bob Martin meeting Alice Chen at the secure door.</p>
+                <div class="entities">
+                    <strong>Participants:</strong> Alice Chen, Bob Martin |
+                    <strong>Objects:</strong> None
+                </div>
+                
+                <div class="evidence-section">
+                    <strong>Evidence:</strong>
+                    <div class="evidence-box"><strong>[SOURCE_CCTV_FEED]</strong>: <em>"2026-10-30 14:18:30 CCTV Camera 3 captures Bob Martin meeting Alice Chen at the secure door."</em></div>
+                </div>
+            </div>
+            
+            <div class="timeline-card" style="border-left: 5px solid #10b981;">
+                <div class="header">
+                    <span class="badge" style="background:#10b981;">OBSERVED</span>
+                    <span class="time">2026-10-30 14:19:10</span>
+                </div>
+                <h3>Badge Reader DR-01: Door held open, Bob Martin enters alongside.</h3>
+                <p>2026-10-30 14:19:10 Badge Reader DR-01: Door held open, Bob Martin enters alongside.</p>
+                <div class="entities">
+                    <strong>Participants:</strong> Bob Martin |
+                    <strong>Objects:</strong> None
+                </div>
+                
+                <div class="evidence-section">
+                    <strong>Evidence:</strong>
+                    <div class="evidence-box"><strong>[SOURCE_BADGE_LOGS]</strong>: <em>"2026-10-30 14:19:10 Badge Reader DR-01: Door held open, Bob Martin enters alongside."</em></div>
+                </div>
+            </div>
+            
+            <div class="timeline-card" style="border-left: 5px solid #10b981;">
+                <div class="header">
+                    <span class="badge" style="background:#10b981;">OBSERVED</span>
+                    <span class="time">2026-10-30 14:22:00</span>
+                </div>
+                <h3>Bastion Terminal #4 session initiated by Alice Chen.</h3>
+                <p>2026-10-30 14:22:00 Bastion Terminal #4 session initiated by Alice Chen.</p>
+                <div class="entities">
+                    <strong>Participants:</strong> Alice Chen |
+                    <strong>Objects:</strong> Bastion Terminal #4
+                </div>
+                
+                <div class="evidence-section">
+                    <strong>Evidence:</strong>
+                    <div class="evidence-box"><strong>[SOURCE_BASTION_LOGS]</strong>: <em>"2026-10-30 14:22:00 Bastion Terminal #4 session initiated by Alice Chen."</em></div>
+                </div>
+            </div>
+            
+            <div class="timeline-card" style="border-left: 5px solid #f59e0b;">
+                <div class="header">
+                    <span class="badge" style="background:#f59e0b;">INFERRED</span>
+                    <span class="time">2026-10-30 14:27:00</span>
+                </div>
+                <h3>Around the time of database backup, presumably Bob Martin and Alice Chen discuss</h3>
+                <p>Around the time of database backup, presumably Bob Martin and Alice Chen discussed emergency migration.</p>
+                <div class="entities">
+                    <strong>Participants:</strong> Alice Chen, Bob Martin |
+                    <strong>Objects:</strong> None
+                </div>
+                <div class="reasoning"><em>Bounded between [2026-10-30T14:22:00] and [2026-10-30T14:32:00]</em></div>
+                <div class="evidence-section">
+                    <strong>Evidence:</strong>
+                    <div class="evidence-box"><strong>[SOURCE_WITNESS_MEMO]</strong>: <em>"Around the time of database backup, presumably Bob Martin and Alice Chen discussed emergency migration."</em></div>
+                </div>
+            </div>
+            
+            <div class="timeline-card" style="border-left: 5px solid #10b981;">
+                <div class="header">
+                    <span class="badge" style="background:#10b981;">OBSERVED</span>
+                    <span class="time">2026-10-30 14:28:15</span>
+                </div>
+                <h3>Production Database Vault schema snapshot exported to encrypted USB drive.</h3>
+                <p>2026-10-30 14:28:15 Production Database Vault schema snapshot exported to encrypted USB drive.</p>
+                <div class="entities">
+                    <strong>Participants:</strong> None |
+                    <strong>Objects:</strong> Production Database Vault
+                </div>
+                
+                <div class="evidence-section">
+                    <strong>Evidence:</strong>
+                    <div class="evidence-box"><strong>[SOURCE_BASTION_LOGS]</strong>: <em>"2026-10-30 14:28:15 Production Database Vault schema snapshot exported to encrypted USB drive."</em></div>
+                </div>
+            </div>
+            
+            <div class="timeline-card" style="border-left: 5px solid #10b981;">
+                <div class="header">
+                    <span class="badge" style="background:#10b981;">OBSERVED</span>
+                    <span class="time">2026-10-30 14:32:00</span>
+                </div>
+                <h3>Bastion Terminal #4 session terminated.</h3>
+                <p>2026-10-30 14:32:00 Bastion Terminal #4 session terminated.</p>
+                <div class="entities">
+                    <strong>Participants:</strong> None |
+                    <strong>Objects:</strong> Bastion Terminal #4
+                </div>
+                
+                <div class="evidence-section">
+                    <strong>Evidence:</strong>
+                    <div class="evidence-box"><strong>[SOURCE_BASTION_LOGS]</strong>: <em>"2026-10-30 14:32:00 Bastion Terminal #4 session terminated."</em></div>
+                </div>
+            </div>
+            
+            <div class="timeline-card" style="border-left: 5px solid #10b981;">
+                <div class="header">
+                    <span class="badge" style="background:#10b981;">OBSERVED</span>
+                    <span class="time">2026-10-30 14:35:00</span>
+                </div>
+                <h3>CCTV shows Alice Chen leaving the corridor holding Master Keycard #09.</h3>
+                <p>2026-10-30 14:35:00 CCTV shows Alice Chen leaving the corridor holding Master Keycard #09.</p>
+                <div class="entities">
+                    <strong>Participants:</strong> Alice Chen |
+                    <strong>Objects:</strong> Master Keycard #09
+                </div>
+                
+                <div class="evidence-section">
+                    <strong>Evidence:</strong>
+                    <div class="evidence-box"><strong>[SOURCE_CCTV_FEED]</strong>: <em>"2026-10-30 14:35:00 CCTV shows Alice Chen leaving the corridor holding Master Keycard #09."</em></div>
+                </div>
+            </div>
+            
+            <div class="timeline-card" style="border-left: 5px solid #6b7280;">
+                <div class="header">
+                    <span class="badge" style="background:#6b7280;">UNKNOWN</span>
+                    <span class="time">UNSPECIFIED / UNANCHORED</span>
+                </div>
+                <h3>Someone unspecified attempted an unauthorized remote query on Production Databas</h3>
+                <p>Someone unspecified attempted an unauthorized remote query on Production Database Vault.</p>
+                <div class="entities">
+                    <strong>Participants:</strong> None |
+                    <strong>Objects:</strong> Production Database Vault
+                </div>
+                <div class="reasoning"><em>Unanchored event with no bounding temporal evidence.</em></div>
+                <div class="evidence-section">
+                    <strong>Evidence:</strong>
+                    <div class="evidence-box"><strong>[SOURCE_WITNESS_MEMO]</strong>: <em>"Someone unspecified attempted an unauthorized remote query on Production Database Vault."</em></div>
+                </div>
+            </div>
+            
+    </div>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SpatialVision 3D - AI 2D Floor Plan & 3D Scene Reconstruction</title>
+  <meta name="description" content="AI-driven 3D Scene Reconstruction, 2D Floor Plan Generation, Spatial Reasoning and Graph Synthesis powered by Cosmos3 and FastAPI." />
+
+  <!-- Google Fonts & Tailwind-like CSS variables -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Three.js and OrbitControls via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body class="dark-theme">
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo-orb">
+        <i data-lucide="box"></i>
+      </div>
+      <div>
+        <h1 class="brand-title">SpatialVision <span class="badge-ai">Cosmos3</span></h1>
+        <p class="brand-subtitle">Spatial AI & 3D Scene Reconstruction Studio</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <div class="preset-selector">
+        <label for="presetSelect">Room Template:</label>
+        <select id="presetSelect">
+          <option value="living_room">Modern Living Room</option>
+          <option value="master_bedroom">Master Bedroom</option>
+          <option value="home_office">Executive Home Office</option>
+        </select>
+      </div>
+      <button id="btnReconstruct" class="btn-primary">
+        <i data-lucide="sparkles"></i>
+        <span>Reconstruct Scene</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Grid Workspace -->
+  <main class="workspace-grid">
+    <!-- Left Sidebar: Controls & Detections Input -->
+    <aside class="sidebar-panel">
+      <div class="panel-section">
+        <h2 class="section-title"><i data-lucide="sliders"></i> Scene Parameters</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Width (m)</label>
+            <input type="number" id="inpRoomW" value="6.0" step="0.5" min="2" max="15" />
+          </div>
+          <div class="form-group">
+            <label>Length (m)</label>
+            <input type="number" id="inpRoomL" value="6.0" step="0.5" min="2" max="15" />
+          </div>
+          <div class="form-group">
+            <label>Height (m)</label>
+            <input type="number" id="inpRoomH" value="2.8" step="0.1" min="2" max="6" />
+          </div>
+        </div>
+
+        <div class="form-group mt-3">
+          <label>AI Spatial Reasoner (Cosmos3 / Natural Language)</label>
+          <textarea id="inpScenePrompt" rows="3" placeholder="Describe the room layout or paste detection cues..."></textarea>
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="chkUseNebius" checked />
+          <label for="chkUseNebius">Use Cosmos3-Super-Reasoner via Nebius</label>
+        </div>
+      </div>
+
+      <!-- Detected Objects List -->
+      <div class="panel-section flex-1 overflow-auto">
+        <div class="section-header-row">
+          <h2 class="section-title"><i data-lucide="layers"></i> Detected Objects (<span id="objCountBadge">0</span>)</h2>
+          <button id="btnAddObject" class="btn-xs"><i data-lucide="plus"></i> Add</button>
+        </div>
+        <div id="detectionsList" class="detections-list">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- System Telemetry / Confidence Summary -->
+      <div class="panel-section telemetry-box">
+        <div class="telemetry-metric">
+          <span class="label">Inference Time:</span>
+          <span id="txtLatency" class="val">-- ms</span>
+        </div>
+        <div class="telemetry-metric">
+          <span class="label">Spatial Graph Edges:</span>
+          <span id="txtEdges" class="val">0</span>
+        </div>
+        <div class="telemetry-metric">
+          <span class="label">Camera Pose (x,y,z):</span>
+          <span id="txtCamPose" class="val">0.0, 1.8, 5.0</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center & Right: Dual View (3D Canvas + 2D Floor Plan) -->
+    <section class="viewport-container">
+      <!-- Tab selector -->
+      <div class="view-tabs">
+        <button class="tab-btn active" data-tab="3d"><i data-lucide="orbit"></i> 3D Reconstruction</button>
+        <button class="tab-btn" data-tab="2d"><i data-lucide="map"></i> 2D Floor Plan</button>
+        <button class="tab-btn" data-tab="graph"><i data-lucide="network"></i> Spatial Graph & Hierarchy</button>
+        <button class="tab-btn" data-tab="json"><i data-lucide="code-2"></i> Scene JSON (Three.js)</button>
+      </div>
+
+      <!-- Tab 1: 3D Three.js Viewport -->
+      <div id="tabContent3D" class="tab-content active-content">
+        <div id="threejs-canvas-wrapper" class="canvas-wrapper">
+          <div class="canvas-overlay-stats">
+            <span class="badge"><i data-lucide="eye"></i> Orbit: Left-Click | Pan: Right-Click | Zoom: Scroll</span>
+            <button id="btnResetCamera" class="btn-mini"><i data-lucide="compass"></i> Reset View</button>
+            <button id="btnToggleWireframe" class="btn-mini"><i data-lucide="grid"></i> Wireframe</button>
+            <button id="btnToggleUncertainty" class="btn-mini"><i data-lucide="activity"></i> Uncertainty Bounds</button>
+          </div>
+          <div id="selectedObjectInfo" class="object-inspector hidden">
+            <h4><i data-lucide="info"></i> <span id="inspectorTitle">Object</span></h4>
+            <div id="inspectorContent"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: 2D Floor Plan Viewport -->
+      <div id="tabContent2D" class="tab-content">
+        <div class="floorplan-wrapper">
+          <div class="floorplan-toolbar">
+            <span class="badge"><i data-lucide="ruler"></i> Scaled 2D Architectural Projection (Meters)</span>
+            <button id="btnDownloadSVG" class="btn-mini"><i data-lucide="download"></i> Export SVG</button>
+          </div>
+          <svg id="floorplanSvg" class="floorplan-svg"></svg>
+        </div>
+      </div>
+
+      <!-- Tab 3: Spatial Graph & Relational Matrix -->
+      <div id="tabContentGraph" class="tab-content">
+        <div class="graph-panel">
+          <div class="graph-header">
+            <h3><i data-lucide="git-fork"></i> Spatial Relationships & Topology Matrix</h3>
+            <p>Calculated multi-directional relations: left/right, near/far, in-front/behind, elevated support.</p>
+          </div>
+          <div id="spatialRelationshipsList" class="relations-grid"></div>
+        </div>
+      </div>
+
+      <!-- Tab 4: Three.js Ready Scene JSON -->
+      <div id="tabContentJSON" class="tab-content">
+        <div class="json-panel">
+          <div class="json-header">
+            <h3>Three.js Ready Scene Schema</h3>
+            <button id="btnCopyJSON" class="btn-mini"><i data-lucide="copy"></i> Copy JSON</button>
+          </div>
+          <pre id="jsonViewer"><code>// Execute reconstruction to view schema</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
