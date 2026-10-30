@@ -8,6 +8,7 @@ The dashboard is published at <https://dradya.github.io/NIVI-HACKATHON/>.
 The hosted demo runs entirely in the browser using the built-in demo case. Uploading evidence requires the Python backend, which is not hosted on GitHub Pages.
 
 The `main` branch automatically builds `member_1_frontend` and deploys it to GitHub Pages through `.github/workflows/pages.yml`.
+When no backend URL is configured, the hosted dashboard disables uploads and explains how to use the demo case instead of sending requests to `localhost` on each visitor's computer. To enable uploads, deploy a backend that implements the frontend's `/api/upload`, `/api/pipeline/run`, `/api/session`, `/api/evidence`, `/api/timeline`, `/api/investigation`, and `/api/scene` endpoints, then add its base URL as the repository Actions variable `VITE_API_URL` and rerun the Pages workflow. The current `member_6_backend` uses a different `/api/v1/cases` API contract and cannot be connected by setting the URL alone.
 
 ## Run the dashboard locally
 

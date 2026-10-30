@@ -7,6 +7,7 @@
 import React, { useCallback, useState } from 'react';
 import type { AppState, ActiveView } from '../../types';
 import { formatConfidence, confidenceLabel } from '../../utils/helpers';
+import { API_CONFIGURED } from '../../services/api';
 
 interface Props {
   state: AppState;
@@ -30,7 +31,7 @@ export function Dashboard({ state, onNavigate, onUpload, onDemo }: Props) {
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setDrag(false);
-    handleFiles(e.dataTransfer.files);
+    if (API_CONFIGURED) handleFiles(e.dataTransfer.files);
   }, [handleFiles]);
 
   return (
@@ -85,7 +86,7 @@ export function Dashboard({ state, onNavigate, onUpload, onDemo }: Props) {
       {/* Upload zone */}
       {!hasData && !isProcessing && (
         <div
-          onDragOver={e => { e.preventDefault(); setDrag(true); }}
+          onDragOver={e => { e.preventDefault(); setDrag(API_CONFIGURED); }}
           onDragLeave={() => setDrag(false)}
           onDrop={handleDrop}
           style={{
@@ -104,26 +105,31 @@ export function Dashboard({ state, onNavigate, onUpload, onDemo }: Props) {
             Images, video, documents, sensor logs — any combination
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 16 }}>
-            {/* Real file upload */}
-            <label style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              padding: '10px 22px', borderRadius: 'var(--radius-md)',
-              background: 'var(--brown-600)', color: '#fff',
-              fontSize: 13, fontWeight: 600, cursor: 'pointer',
-              transition: 'opacity var(--ease)',
-            }}
-              onMouseEnter={e => (e.currentTarget.style.opacity = '.85')}
-              onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
-            >
-              <input
-                type="file"
-                multiple
-                accept="image/*,video/*,.pdf,.txt,.json,.log,.csv"
-                style={{ display: 'none' }}
-                onChange={e => handleFiles(e.target.files)}
-              />
-              Select Files
-            </label>
+            {API_CONFIGURED ? (
+              <label style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                padding: '10px 22px', borderRadius: 'var(--radius-md)',
+                background: 'var(--brown-600)', color: '#fff',
+                fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                transition: 'opacity var(--ease)',
+              }}
+                onMouseEnter={e => (e.currentTarget.style.opacity = '.85')}
+                onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+              >
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*,video/*,.pdf,.txt,.json,.log,.csv"
+                  style={{ display: 'none' }}
+                  onChange={e => handleFiles(e.target.files)}
+                />
+                Select Files
+              </label>
+            ) : (
+              <p role="status" style={{ maxWidth: 420, color: 'var(--brown-500)', fontSize: 13, lineHeight: 1.6 }}>
+                Evidence uploads need a connected backend. This hosted demo has no backend configured; use Load Demo Case instead.
+              </p>
+            )}
 
             {/* Demo shortcut */}
             <button onClick={onDemo} style={{

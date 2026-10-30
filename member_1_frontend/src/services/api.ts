@@ -10,11 +10,25 @@ import type {
   SceneData, SceneObject, UploadSession,
 } from '../types';
 
-const BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
+const BASE = (
+  import.meta.env.VITE_API_URL?.trim() ||
+  (import.meta.env.DEV ? 'http://localhost:8000' : '')
+).replace(/\/+$/, '');
+
+export const API_CONFIGURED = Boolean(BASE);
+
+function apiUrl(path: string): string {
+  if (!BASE) {
+    throw new Error(
+      'Evidence uploads are unavailable because this hosted demo has no backend configured. Use Load Demo Case instead.',
+    );
+  }
+  return `${BASE}${path}`;
+}
 
 // ── Generic GET helper ─────────────────────────────────────
 async function get<T>(path: string): Promise<T> {
-  const res = await fetch(`${BASE}${path}`);
+  const res = await fetch(apiUrl(path));
   if (!res.ok) {
     const text = await res.text().catch(() => '');
     throw new Error(`API ${res.status}${text ? `: ${text}` : ''}`);
@@ -27,7 +41,7 @@ async function get<T>(path: string): Promise<T> {
 export async function uploadFiles(files: File[]): Promise<UploadSession> {
   const fd = new FormData();
   files.forEach(f => fd.append('files', f));
-  const res = await fetch(`${BASE}/api/upload`, { method: 'POST', body: fd });
+  const res = await fetch(apiUrl('/api/upload'), { method: 'POST', body: fd });
   if (!res.ok) {
     const text = await res.text().catch(() => '');
     throw new Error(`Upload failed (${res.status})${text ? `: ${text}` : ''}`);
@@ -38,7 +52,7 @@ export async function uploadFiles(files: File[]): Promise<UploadSession> {
 
 // ── Pipeline trigger — now checks res.ok ───────────────────
 export async function triggerPipeline(sessionId: string): Promise<void> {
-  const res = await fetch(`${BASE}/api/pipeline/run`, {
+  const res = await fetch(apiUrl('/api/pipeline/run'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ session_id: sessionId }),
